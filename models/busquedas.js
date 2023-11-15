@@ -36,6 +36,33 @@ class Busquedas {
       return []; // retornar los lugares
     }
   }
+
+  async climasLugar(lat, lon) {
+    // peticion http
+    try {
+      const instance = axios.create({
+        baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+        params: {
+          lat,
+          lon,
+          appid: process.env.OPENWEATHER_KEY,
+          units: "metric",
+          lang: "es",
+        },
+      });
+      const res = await instance.get();
+      console.log(res.data);
+      const { weather, main } = res.data;
+      return {
+        desc: weather[0].description,
+        min: main.temp_min,
+        max: main.temp_max,
+        temp: main.temp,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = Busquedas;
